@@ -24,7 +24,7 @@ export const useCitiesStore = defineStore("cities", () => {
     );
   };
 
-  // Sets
+  // Sets the cities list in the store
   const setCitiesList = (citiesList: string[]) => {
     state.cities = citiesList;
   };

@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts" setup>
+// Imports
 import {
   withDefaults,
   defineProps,
@@ -42,6 +43,7 @@ import {
 import { IListType } from "@/types/common";
 import { debounce } from "lodash";
 
+// Props
 interface Props {
   list: string[] | IListType[];
   autocompleteList: string[];
@@ -54,23 +56,22 @@ const props = withDefaults(defineProps<Props>(), {
   focusedInput: false,
 });
 
-const refInput = ref(null);
-
+// Emits
 const emit = defineEmits<{
   (e: "updateAutocompleteList", query: string): void;
   (e: "updateList", element: string): void;
   (e: "update:modelValue", element: string): void;
 }>();
 
+// Data properties
+const refInput = ref(null);
+const showPrompt = ref<boolean>(false);
 const inputValue = computed({
   get: () => props.modelValue,
   set: (value) => {
     emit("update:modelValue", value);
   },
 });
-
-const showPrompt = ref<boolean>(false);
-
 const menuOptions = computed(() =>
   props.autocompleteList.map((element) => {
     if (typeof element === "object") {
@@ -87,6 +88,7 @@ const menuOptions = computed(() =>
   })
 );
 
+// Methods
 const inputCheck = debounce(() => {
   showPrompt.value = true;
   console.log(inputValue.value);
@@ -102,7 +104,9 @@ const updateList = (element: string) => {
   emit("updateList", element);
 };
 
+// Lifecycle hooks
 onMounted(() => {
+  // Autofocus on input check when the component is mounted
   nextTick(() => {
     if (props.focusedInput) {
       refInput.value.focus();

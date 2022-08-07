@@ -30,22 +30,16 @@
 </template>
 
 <script lang="ts" setup>
-import { withDefaults, defineProps } from "vue";
+// Imports
+import { defineProps } from "vue";
 import { IListType } from "@/types/common";
 
+// Props
 interface Props {
   list: string[] | IListType[];
-  autocompleteList: string[];
-  focusedInput?: boolean;
-  headerTitle?: string;
   tableHeaders: string[];
 }
-const props = withDefaults(defineProps<Props>(), {
-  title: "",
-  placeholder: "",
-  focusedInput: false,
-  headerTitle: "",
-});
+const props = defineProps<Props>();
 </script>
 
 <style scoped></style>

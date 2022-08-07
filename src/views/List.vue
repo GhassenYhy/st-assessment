@@ -74,6 +74,13 @@ const booksStore = useBooksStore();
 const { state: booksState } = storeToRefs(booksStore);
 const { fetchBooksAutocompleteList, setBooksList, fetchBooksList } = booksStore;
 
+// Cities data properties
+const citiesInputValue = ref<string>("");
+const citiesStore = useCitiesStore();
+const { state: citiesState } = storeToRefs(citiesStore);
+const { fetchCitiesAutocompleteList, setCitiesList, fetchCitiesList } =
+  citiesStore;
+
 // Books methods
 const updateBooksAutocompleteList = (query: string) => {
   fetchBooksAutocompleteList(query);
@@ -90,13 +97,6 @@ const searchBooks = () => {
   fetchBooksList(booksInputValue.value);
   fetchBooksAutocompleteList("");
 };
-
-// Cities data properties
-const citiesInputValue = ref<string>("");
-const citiesStore = useCitiesStore();
-const { state: citiesState } = storeToRefs(citiesStore);
-const { fetchCitiesAutocompleteList, setCitiesList, fetchCitiesList } =
-  citiesStore;
 
 // Cities methods
 const updateCitiesAutocompleteList = (query: string) => {
