@@ -23,7 +23,7 @@ function findBiggestNumber(array) {
 }
 
 const shifetedArray = shiftArray(arrayOfNumbers);
-console.log("Shifted number: ", shifetedArray);
+console.log("Shifted Array: ", shifetedArray);
 
 const biggestNumber = findBiggestNumber(shifetedArray);
 console.log("Highest number: ", biggestNumber);
