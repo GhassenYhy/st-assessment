@@ -91,7 +91,6 @@ const menuOptions = computed(() =>
 // Methods
 const inputCheck = debounce(() => {
   showPrompt.value = true;
-  console.log(inputValue.value);
   if (inputValue.value.length > 2) {
     showPrompt.value = false;
     emit("updateAutocompleteList", inputValue.value);
