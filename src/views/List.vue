@@ -1,71 +1,127 @@
 <template>
   <div class="filtering-sections-container">
-    <SearchSection
-      :list="booksState.books"
-      :autocomplete-list="booksState.booksAutocomplete"
-      :headerTitle="'Books'"
-      :tableHeaders="['Title', 'Author']"
-      focused-input
-      @updateAutocompleteList="updateBooksAutocompleteList"
-      @updateList="updateBooksList"
-      @clearSearch="clearSearch"
-      @search="search"
-    />
+    <n-card class="card">
+      <h2>Books</h2>
+      <n-divider />
+      <n-space justify="space-between">
+        <StInput
+          :list="booksState.books"
+          :autocomplete-list="booksState.booksAutocomplete"
+          v-model="booksInputValue"
+          focused-input
+          @updateAutocompleteList="updateBooksAutocompleteList"
+          @updateList="updateBooksList"
+        ></StInput>
+        <n-space>
+          <n-button :disabled="booksInputValue.length < 3" @click="searchBooks"
+            >Search</n-button
+          >
+          <n-button type="warning" @click="clearSearchBooks"> Reset </n-button>
+        </n-space>
+      </n-space>
+      <n-divider />
+      <StTable
+        :list="booksState.books"
+        :tableHeaders="['Title', 'Author']"
+      ></StTable>
+    </n-card>
 
-    <SearchSection
-      :list="citiesState.cities"
-      :autocomplete-list="citiesState.citiesAutocomplete"
-      :tableHeaders="['City name']"
-      :headerTitle="'Cities'"
-      @updateAutocompleteList="updateCities"
-    />
+    <n-card class="card">
+      <h2>Cities</h2>
+      <n-divider />
+      <n-space justify="space-between">
+        <StInput
+          :list="citiesState.cities"
+          :autocomplete-list="citiesState.citiesAutocomplete"
+          v-model="citiesInputValue"
+          @updateAutocompleteList="updateCitiesAutocompleteList"
+          @updateList="updateCitiesList"
+        ></StInput>
+        <n-space>
+          <n-button
+            :disabled="citiesInputValue.length < 3"
+            @click="searchCities"
+            >Search</n-button
+          >
+          <n-button type="warning" @click="clearSearchCities"> Reset </n-button>
+        </n-space>
+      </n-space>
+      <n-divider />
+      <StTable
+        :list="citiesState.cities"
+        :tableHeaders="['City name']"
+      ></StTable>
+    </n-card>
   </div>
 </template>
 
 <script lang="ts" setup>
 // Imports
-import SearchSection from "../components/base/SearchSection";
-import { onMounted } from "vue";
+import StInput from "../components/st-input";
+import StTable from "../components/st-table";
+import { onMounted, ref } from "vue";
 import { useCitiesStore } from "@/store/cities";
 import { useBooksStore } from "@/store/books";
 import { storeToRefs } from "pinia";
+
+// Data imports
 import booksData from "../data/books";
 import citiesData from "../data/cities";
 
+// Books data properties
+const booksInputValue = ref<string>("");
 const booksStore = useBooksStore();
-const citiesStore = useCitiesStore();
-
 const { state: booksState } = storeToRefs(booksStore);
 const { fetchBooksAutocompleteList, setBooksList, fetchBooksList } = booksStore;
 
-const { state: citiesState } = storeToRefs(citiesStore);
-const { fetchCities, setCitiesList } = citiesStore;
-
+// Books methods
 const updateBooksAutocompleteList = (query: string) => {
   fetchBooksAutocompleteList(query);
 };
-
 const updateBooksList = (element: string) => {
   fetchBooksList(element);
   fetchBooksAutocompleteList("");
 };
-const updateCities = (query: string) => {
-  fetchCities(query);
-};
-const clearSearch = () => {
+const clearSearchBooks = () => {
+  booksInputValue.value = "";
   setBooksList(booksData);
 };
-const search = (query: string) => {
-  fetchBooksList(query);
+const searchBooks = () => {
+  fetchBooksList(booksInputValue.value);
+  fetchBooksAutocompleteList("");
 };
 
+// Cities data properties
+const citiesInputValue = ref<string>("");
+const citiesStore = useCitiesStore();
+const { state: citiesState } = storeToRefs(citiesStore);
+const { fetchCitiesAutocompleteList, setCitiesList, fetchCitiesList } =
+  citiesStore;
+
+// Cities methods
+const updateCitiesAutocompleteList = (query: string) => {
+  fetchCitiesAutocompleteList(query);
+};
+const updateCitiesList = (query: string) => {
+  fetchCitiesList(query);
+  fetchCitiesAutocompleteList("");
+};
+const clearSearchCities = () => {
+  citiesInputValue.value = "";
+  setCitiesList(citiesData);
+};
+const searchCities = () => {
+  fetchCitiesList(citiesInputValue.value);
+  fetchCitiesAutocompleteList("");
+};
+
+// Lifecycle hooks
 onMounted(() => {
   setBooksList(booksData);
   setCitiesList(citiesData);
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .filtering-sections-container {
   display: flex;
@@ -84,6 +140,15 @@ onMounted(() => {
       padding: 25px;
       max-width: 100%;
     }
+  }
+}
+.card {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  max-width: 500px;
+  height: fit-content;
+  @media (max-width: 768px) {
+    align-self: center;
   }
 }
 </style>

@@ -10,7 +10,7 @@
       v-model:value="inputValue"
       ref="refInput"
       type="text"
-      placeholder="Search"
+      :placeholder="props.placeholder"
       @input="inputCheck"
     />
   </n-space>
@@ -45,15 +45,13 @@ import { debounce } from "lodash";
 interface Props {
   list: string[] | IListType[];
   autocompleteList: string[];
+  placeholder?: string;
   focusedInput?: boolean;
-  headerTitle?: string;
-  tableHeaders: string[];
+  modelValue: string;
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: "",
-  placeholder: "",
+  placeholder: "Search",
   focusedInput: false,
-  headerTitle: "",
 });
 
 const refInput = ref(null);
@@ -61,12 +59,17 @@ const refInput = ref(null);
 const emit = defineEmits<{
   (e: "updateAutocompleteList", query: string): void;
   (e: "updateList", element: string): void;
-  (e: "clearSearch"): void;
-  (e: "search", query: string): void;
+  (e: "update:modelValue", element: string): void;
 }>();
 
+const inputValue = computed({
+  get: () => props.modelValue,
+  set: (value) => {
+    emit("update:modelValue", value);
+  },
+});
+
 const showPrompt = ref<boolean>(false);
-const inputValue = ref<string>("");
 
 const menuOptions = computed(() =>
   props.autocompleteList.map((element) => {
@@ -85,27 +88,18 @@ const menuOptions = computed(() =>
 );
 
 const inputCheck = debounce(() => {
-  console.log("test");
   showPrompt.value = true;
+  console.log(inputValue.value);
   if (inputValue.value.length > 2) {
     showPrompt.value = false;
     emit("updateAutocompleteList", inputValue.value);
+    emit("update:modelValue", inputValue.value);
   }
 }, 300);
 
 const updateList = (element: string) => {
   inputValue.value = element;
   emit("updateList", element);
-};
-
-const clearSearch = () => {
-  inputValue.value = "";
-  emit("clearSearch");
-};
-
-const search = () => {
-  emit("search", inputValue.value);
-  emit("updateAutocompleteList", "");
 };
 
 onMounted(() => {
@@ -118,12 +112,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.card {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  max-width: 500px;
-}
-
 .autocomplete-list {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
