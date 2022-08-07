@@ -1,10 +1,10 @@
 <template>
-  <List />
+  <StList />
 </template>
 
 <script lang="ts" setup>
 // Imports
-import List from "./views/List.vue";
+import StList from "./views/st-list.vue";
 </script>
 
 <style lang="scss"></style>

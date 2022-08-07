@@ -9,8 +9,8 @@
           :autocomplete-list="booksState.booksAutocomplete"
           v-model="booksInputValue"
           focused-input
-          @updateAutocompleteList="updateBooksAutocompleteList"
-          @updateList="updateBooksList"
+          @update-autocomplete-list="updateBooksAutocompleteList"
+          @update-list="updateBooksList"
         ></StInput>
         <n-space>
           <n-button :disabled="booksInputValue.length < 3" @click="searchBooks"
@@ -22,7 +22,7 @@
       <n-divider />
       <StTable
         :list="booksState.books"
-        :tableHeaders="['Title', 'Author']"
+        :table-headers="['Title', 'Author']"
       ></StTable>
     </n-card>
 
@@ -34,8 +34,8 @@
           :list="citiesState.cities"
           :autocomplete-list="citiesState.citiesAutocomplete"
           v-model="citiesInputValue"
-          @updateAutocompleteList="updateCitiesAutocompleteList"
-          @updateList="updateCitiesList"
+          @update-autocomplete-list="updateCitiesAutocompleteList"
+          @update-list="updateCitiesList"
         ></StInput>
         <n-space>
           <n-button
@@ -49,7 +49,7 @@
       <n-divider />
       <StTable
         :list="citiesState.cities"
-        :tableHeaders="['City name']"
+        :table-headers="['City name']"
       ></StTable>
     </n-card>
   </div>
